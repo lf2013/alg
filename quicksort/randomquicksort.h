@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int quicksort(int A[], int l, int r)
 {
+	srand(time(NULL));
 	if(l < r){
 		int q = quickdiv(A, l, r);
 		quicksort(A, l, q - 1);
