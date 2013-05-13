@@ -1,8 +1,10 @@
 #include <stdio.h>
-#include "quicksortv3.h"
+#include <time.h>
+#include "randomquicksort.h"
 int
 main()
 {
+	srand(time(NULL));
 	int A[] = {10, 4, 1, 3, 2, 16, 9,10, 14,8,7};
 	int i;
 	quicksort(A, 0, 10);
