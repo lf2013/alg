@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 struct searchTree{
 	struct searchTree *p, *l, *r;
 	int k;
@@ -58,27 +59,28 @@ treeInsert(struct searchTree * t, int x)
 	}
 }
 
-int
+struct searchTree * 
 treeMax(struct searchTree * t)
 {
 	if(t == NULL)
-		return -1;
+		return NULL; 
 	else if(t -> r == NULL)
-		return t -> k;
+		return t;
 	else return treeMax(t -> r);
 }
 
-int
+struct searchTree * 
 treeMin(struct searchTree *t)
 {
 	if(t == NULL)
-		return -1;
+		return NULL;
 	else if(t -> l == NULL)
-		return t -> k;
+		return t;
 	else return treeMin(t -> l);
 }
 
-struct searchTree * treeSearch(struct searchTree * t, int x)
+struct searchTree * 
+treeSearch(struct searchTree * t, int x)
 {
 	if(t == NULL)
 		return NULL;
@@ -90,9 +92,71 @@ struct searchTree * treeSearch(struct searchTree * t, int x)
 		treeSearch(t -> r, x);
 }
 
-struct searchTree * treeSuccessor(struct searchTree *t)
+struct searchTree *
+treeSuccessor(struct searchTree *t)
 {
 	if(t -> r != NULL)
 		return treeMin(t -> r);	
-	//else(
+	else{
+		struct searchTree *y = t -> p; 
+		struct searchTree *x = t;
+		while(y != NULL && y -> l != x){
+			x = y;
+			y = x -> p;
+		}	
+		return y;
+	}
+}
+
+struct searchTree *
+treePredecessor(struct searchTree *t)
+{
+	if(t -> l != NULL)
+		return treeMax(t -> r);	
+	else{
+		struct searchTree *y = t -> p; 
+		struct searchTree *x = t;
+		while(y != NULL && y -> r != x){
+			x = y;
+			y = x -> p;
+		}	
+		return y;
+	}
+}
+
+struct searchTree *
+treeDelete(struct searchTree * t)
+{
+	if(t == NULL)
+		return NULL;
+
+	if(t -> l == NULL && t -> r == NULL)
+		if(t -> p -> l == t)
+			t -> p -> l = NULL;
+		else 
+			t -> p -> r = NULL;
+
+	else if(t -> l == NULL && t -> r != NULL)
+		if(t -> p -> l == t){
+			t -> r -> p = t -> p;
+			t -> p -> l = t -> r;
+		}
+		else{
+			t -> r -> p = t -> p;
+			t -> p -> r = t -> r;
+		}
+	else if(t -> l != NULL && t -> r == NULL)
+		if(t -> p -> l == t){
+			t -> l -> p = t -> p;
+			t -> p -> l = t -> l;
+		}
+		else{
+			t -> l -> p = t -> p;
+			t -> p -> r = t -> l;
+		}
+	else{
+		struct searchTree * y = treeSuccessor(t);
+		t -> k = y -> k;
+		treeDelete(y);
+	}
 }
